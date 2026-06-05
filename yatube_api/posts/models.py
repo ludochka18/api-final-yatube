@@ -9,40 +9,36 @@ class Group(models.Model):
     slug = models.SlugField(unique=True)
     description = models.TextField(blank=True)
 
-    def  __str__(self):
+    def __str__(self):
         return self.title
 
 
 class Post(models.Model):
     text = models.TextField()
-
     pub_date = models.DateTimeField(
         'Дата публикации',
-        auto_now_add=True # автоматически поставить время
+        auto_now_add=True
     )
-
     author = models.ForeignKey(
         User,
-        on_delete=models.CASCADE, # если удалить пользователя — удалить все его посты
+        on_delete=models.CASCADE,
         related_name='posts'
     )
-
     image = models.ImageField(
         upload_to='posts/',
         null=True,
         blank=True
     )
-
-    group = models.ForeignKey( # это группа, к которой относится пост
+    group = models.ForeignKey(
         Group,
-        on_delete=models.SET_NULL, # если удалить группу — посты останутся
+        on_delete=models.SET_NULL,
         related_name='posts',
         blank=True,
         null=True,
     )
 
     class Meta:
-        ordering = ('id',) # по умолчанию сортировать посты по id
+        ordering = ('id',)
 
     def __str__(self):
         return self.text[:15]
@@ -50,12 +46,21 @@ class Post(models.Model):
 
 class Comment(models.Model):
     author = models.ForeignKey(
-        User, on_delete=models.CASCADE, related_name='comments')
+        User,
+        on_delete=models.CASCADE,
+        related_name='comments'
+    )
     post = models.ForeignKey(
-        Post, on_delete=models.CASCADE, related_name='comments')
+        Post,
+        on_delete=models.CASCADE,
+        related_name='comments'
+    )
     text = models.TextField()
     created = models.DateTimeField(
-        'Дата добавления', auto_now_add=True, db_index=True)
+        'Дата добавления',
+        auto_now_add=True,
+        db_index=True
+    )
 
     class Meta:
         ordering = ('id',)
@@ -65,17 +70,22 @@ class Comment(models.Model):
 
 
 class Follow(models.Model):
-    user = models.ForeignKey (
-        User, on_delete=models.CASCADE, related_name='follower'
+    user = models.ForeignKey(
+        User,
+        on_delete=models.CASCADE,
+        related_name='follower'
     )
     following = models.ForeignKey(
-        User, on_delete=models.CASCADE, related_name='following'
+        User,
+        on_delete=models.CASCADE,
+        related_name='following'
     )
 
     class Meta:
         constraints = [
-            models.UniqueConstraint( # запрет дубликатов подписок
-                fields=('user', 'following'), name='unique_follow'
+            models.UniqueConstraint(
+                fields=('user', 'following'),
+                name='unique_follow'
             )
         ]
 
