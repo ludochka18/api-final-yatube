@@ -80,6 +80,92 @@ python manage.py runserver
 После запуска проекта документация доступна по адресу:
 http://127.0.0.1:8000/redoc/
 
+Примеры запросов:
+1. Получение списка публикаций
+
+Запрос:
+GET /api/v1/posts/
+
+Ответ:
+[
+
+        "id": 1,
+        "text": "Мой первый пост",
+        "author": "lilia",
+        "group": 1,
+        "pub_date": "2026-06-07T10:00:00Z"
+    }
+]
+
+2. Создание публикации
+
+Запрос:
+POST /api/v1/posts/
+Authorization: Bearer <access_token>
+
+Тело запроса:
+{
+    "text": "Новый пост",
+    "group": 1
+}
+
+Ответ:
+{
+    "id": 2,
+    "text": "Новый пост",
+    "author": "lilia",
+    "group": 1
+}
+
+3. Получение комментариев публикации
+
+Запрос:
+GET /api/v1/posts/1/comments/
+
+Ответ:
+{
+        "id": 1,
+        "author": "user",
+        "text": "Отличный пост!",
+        "created": "2026-06-07T12:00:00Z"
+}
+
+4. Подписка на автора
+
+Запрос:
+POST /api/v1/follow/
+Authorization: Bearer <access_token>
+
+Тело запроса:
+{
+    "following": "author_username"
+}
+
+Ответ:
+{
+    "user": "lilia",
+    "following": "author_username"
+}
+
+
+5. Получение JWT-токена
+
+Запрос:
+POST /api/v1/jwt/create/
+
+Тело запроса:
+{
+    "username": "username",
+    "password": "password"
+}
+
+Ответ:
+{
+    "refresh": "refresh_token",
+    "access": "access_token"
+}
+
+
 Аутентификация
 Получение JWT-токена:
 POST /api/v1/jwt/create/
@@ -93,3 +179,15 @@ POST /api/v1/jwt/create/
 3. оформлять подписки.
 
 Изменять и удалять публикации и комментарии может только их автор.
+
+
+Автор
+Людмила Барсукова
+
+Студентка направления Backend-разработка на Python.
+
+GitHub:
+https://github.com/ludochka18
+
+Email:
+ludmilabarsukova13@gmail.com
