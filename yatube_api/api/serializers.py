@@ -1,7 +1,7 @@
 from rest_framework import serializers
 from rest_framework.relations import SlugRelatedField
 
-from posts.models import Comment, Post, Group, Follow, User
+from posts.models import Comment, Follow, Group, Post, User
 
 
 class GroupSerializer(serializers.ModelSerializer):
@@ -37,15 +37,14 @@ class FollowSerializer(serializers.ModelSerializer):
         model = Follow
         fields = ('user', 'following')
 
-    def validate(self, data):
+    def validate_following(self, following):
         user = self.context['request'].user
-        following = data.get('following')
         if user == following:
             raise serializers.ValidationError(
                 'Нельзя подписаться на самого себя.'
             )
-        if Follow.objects.filter(user=user, following=following).exists():
+        if user.follower.filter(following=following).exists():
             raise serializers.ValidationError(
                 'Вы уже подписаны на этого пользователя.'
             )
-        return data
+        return following
